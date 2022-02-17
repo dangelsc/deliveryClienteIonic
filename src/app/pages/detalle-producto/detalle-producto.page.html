@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>detalleProducto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    
+      <img src="https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2021/03/30/6063031b90a87.r_d.1083-871-0.jpeg">
+    
+    <form [formGroup]="prodForm" (ngSubmit)="formSub()">
+      <ion-item>
+        <ion-label>
+          Nombre producto          
+        </ion-label>
+        {{prod.nombre}}
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Descripcion
+        </ion-label>
+        {{prod.descripcion}}
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Precion
+        </ion-label>
+        {{prod.precio|number: formatNumber}}
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          Cantidad
+        </ion-label>
+        <ion-input  [(ngModel)]="cantidad" formControlName="cantidad" type="Number" required=""></ion-input>
+      </ion-item>
+      <ion-item color="danger">
+        <ion-label >
+          Importe
+        </ion-label>
+       Bs. {{(cantidad*prod.precio)|number: formatNumber}}
+      </ion-item>
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" color="primary"
+            shape="full" expand="block">Pedir</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-list>
+</ion-content>
