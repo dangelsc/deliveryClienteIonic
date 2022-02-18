@@ -26,7 +26,8 @@ export class Tab1Page {
   async openProducto(prod:Producto){
     console.log(prod);
     const modal = await this.modalCtrl.create({
-      component: LoginPage, //DetalleProductoPage,
+      component: //LoginPage, 
+      DetalleProductoPage,
       componentProps:{id:prod.id},
       breakpoints:[0,0.5,0.8],
       initialBreakpoint:1
