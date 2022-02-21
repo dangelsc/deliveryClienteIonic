@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import {  Firestore, collection, collectionData,   doc, docData, addDoc, deleteDoc, updateDoc } 
+import { query,where,  Firestore, collection, collectionData,   doc, docData, addDoc, deleteDoc, updateDoc } 
                      from '@angular/fire/firestore';
+//import { Database, equalTo, list, ListenEvent, onValue, orderByChild, query, ref } from '@angular/fire/database';
 import { observable, Observable } from 'rxjs';
 import { Pedido  as Coleccion } from '../models/Pedido';
+import { AuthenticationService } from './Authentication.service';
 //import { AngularFirestore } from "@angular/fire/firestore";
 //import * as firebase from 'firebase';
 //import * as firebase from 'firebase';
@@ -12,12 +14,32 @@ import { Pedido  as Coleccion } from '../models/Pedido';
 })
 export class PedidoService {
   private dbpath='Pedido';
-  constructor(private dbb:Firestore)
+  constructor(private dbb:Firestore,
+      private aut:AuthenticationService
+    )
   { }
-  getAll():Observable<Coleccion[]>
+  async getAll(): Promise<any>
   {
-    const notesRef = collection(this.dbb, this.dbpath);
-    return collectionData(notesRef, { idField: 'id'}) as Observable<Coleccion[]>;
+    return new Promise((resolve, reject) =>
+    {
+      let uid='';
+    try{
+      this.aut.userDetalle()
+      .then(
+        s=>{
+        uid=s.uid;
+        console.log(" ser uid",uid);
+        const notesRef = collection(
+          this.dbb,this.dbpath);
+        const q=query(
+          notesRef,where('cliente','==',uid));
+        resolve(
+          collectionData(q,{ idField: 'id'}
+          ));// as Observable<Coleccion[]>;
+       });
+    }catch(e){
+      reject(e);
+    }});
   }
   getItem(id:string):Observable<Coleccion>{
 

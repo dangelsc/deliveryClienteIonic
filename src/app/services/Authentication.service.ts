@@ -24,7 +24,15 @@ export class AuthenticationService {
     this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
   loginEmail(email,password) {
-   
+    var res = null;
+    res = firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION).then(async () =>
+    {
+      this.auth.onAuthStateChanged(user => console.log(user));
+        let userReceived = await this.auth.signInWithEmailAndPassword(email, password).catch(() => {console.log("Error during login"); return (null)})
+        return (userReceived);
+    }).catch(() => {console.log("Error during setting log in persistence"); return (null)})
+
+    return (res);
     return this.afAuth.signInWithEmailAndPassword(email,password);
   }
   logout()  : Promise<any>

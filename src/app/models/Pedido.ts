@@ -5,6 +5,7 @@ export class Pedido{
         nombre:String,
         apellidos:String*/
     };
+    estado:string='pendiente';
     detalle=[];
     //cantidad?:Number;
     fecha?:Date;

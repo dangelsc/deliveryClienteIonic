@@ -1,17 +1,30 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      Pedidos
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-list>
+    <ion-list-header>
+      <ion-label>
+        Pedidos
+      </ion-label>
+    </ion-list-header>
+    <ion-item *ngFor="let prod of pedido" >
+        <ion-thumbnail slot="end">
+          <img src="https://www.lavanguardia.com/files/og_thumbnail/files/fp/uploads/2021/03/30/6063031b90a87.r_d.1083-871-0.jpeg">
+        </ion-thumbnail>
+        <h2>{{prod.detalle.length>1?'Varios productos':prod.detalle[0].producto.nombre}}</h2>
+        <br><p>{{prod.fecha.toDate()|date:'mm/YYYY'}}</p>
+        <ion-label>{{prod.estado}}</ion-label>
+        <ion-label>{{prod.total|number: formatNumber}}</ion-label>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+    </ion-item>
+    
+  </ion-list>
+  <ion-label>Pedidos en total:
+    <ion-badge item-end>{{pedido.length}}</ion-badge></ion-label>
 </ion-content>
