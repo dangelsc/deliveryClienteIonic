@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { Pedido } from 'src/app/models/Pedido';
 import { AuthenticationService } from 'src/app/services/Authentication.service';
 import { LoginPage } from '../login/login.page';
+import { UbicacionPage } from '../ubicacion/ubicacion.page';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -90,29 +91,47 @@ export class DetalleProductoPage implements OnInit {
       await toast.present();
       return;
     }
-    let cantidad=this.prodForm.value.cantidad;
-    let pd=new Pedido();
-    
-    pd.cliente=
-      this.uid
-    ;
-    pd.detalle.push({producto:this.prod
-      ,cantidad:cantidad
-      ,importe:cantidad*Number(this.prod.precio)});
-    pd.fecha=new Date();//'firebase.firestore.FieldValue.serverTimestamp()';
-    pd.total=cantidad*Number(this.prod.precio);
-    console.log("******",pd);
-    this.dbPedido.add(pd);
-    
-    const toast= await this.toastCtrl.create({
-      message:'Datos registrados',
-      duration:4000
+    ///Abrir mapa para ubicacion
+    const modal = await this.modalCtrl.create({
+      component: UbicacionPage,
     });
-    await toast.present();
+    
+    await modal.present();
+    //await modal.onDidDismiss();
+    const {data}= await modal.onWillDismiss();
+    //({
 
-    this.prodForm.reset();
-    this.modalCtrl.dismiss();
-    this.router.navigate(['/']);
+      console.log("retornooo",data);
+    
+    
+      let cantidad=this.prodForm.value.cantidad;
+      let pd=new Pedido();
+      pd.lat=data.lat;
+      pd.lon=data.lon;
+      pd.estado="Proceso";
+      pd.estadoMoto="";
+      pd.idmoto='';
+      pd.cliente=
+        this.uid
+      ;
+      pd.detalle.push({producto:this.prod
+        ,cantidad:cantidad
+        ,importe:cantidad*Number(this.prod.precio)});
+      pd.fecha=new Date();//'firebase.firestore.FieldValue.serverTimestamp()';
+      pd.total=cantidad*Number(this.prod.precio);
+      console.log("******",pd);
+      this.dbPedido.add(pd);
+      
+      const toast= await this.toastCtrl.create({
+        message:'Datos registrados',
+        duration:4000
+      });
+      await toast.present();
+
+      this.prodForm.reset();
+      this.modalCtrl.dismiss();
+      this.router.navigate(['/']);
+    //});
   }
 
 }

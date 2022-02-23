@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment';
 
+import { HttpClientModule } from '@angular/common/http'
 
 //import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 //import { provideAuth,getAuth } from '@angular/fire/auth';
@@ -23,23 +24,23 @@ import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { AuthenticationService } from './services/Authentication.service';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), 
     AppRoutingModule,
+    HttpClientModule,
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    //AngularFirestoreModule,
-
-    
     provideFirestore(() => getFirestore()),
-
     provideDatabase(() => getDatabase()),
-    
     provideAuth(() => getAuth()),
   ],
   providers: [
+    Geolocation,
+    NativeGeocoder,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     //{ provide: AUTH_SETTINGS, useValue: { appVerificationDisabledForTesting: true } }
     //,AuthenticationService

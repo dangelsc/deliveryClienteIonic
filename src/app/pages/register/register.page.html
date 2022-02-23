@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>register</ion-title>
+    <ion-title>registro</ion-title>
     <ion-button slot="start">
       <ion-back-button></ion-back-button>
     </ion-button>
@@ -9,6 +9,11 @@
 
 <ion-content>
   <div class="form">
+    <ion-item>
+      Mapa
+      <div id="map" style="height:400px;"></div>
+
+    </ion-item>
     <ion-item>
       <ion-label position="starcked">Nombre</ion-label>
       <ion-input [(ngModel)]="nombre"></ion-input>

@@ -1,0 +1,14 @@
+.pizzaIcon {
+    border-radius: 15px;
+    background-color: rgb(230, 12, 12);
+  }
+  .pizzaIcon svg {
+    width: 23px;
+    height: 23px;
+    left: 4px;
+    top: 4px;
+    position: absolute;
+  }
+  .pizzaIcon svg path {
+    fill: #fefefe;
+  }

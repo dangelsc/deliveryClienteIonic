@@ -24,7 +24,6 @@ export class Tab2Page {
     ,alertCtrl: AlertController,
     private aut:AuthenticationService
     ) {
-      
     this.verificarLogin().then(s=>{
       this.DBPedido.getAll().then(serve=>{
         console.log("------>",serve)

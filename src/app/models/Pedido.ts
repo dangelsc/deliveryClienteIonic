@@ -5,9 +5,12 @@ export class Pedido{
         nombre:String,
         apellidos:String*/
     };
+    lat:Number;
+    lon:Number;
     estado:string='pendiente';
     detalle=[];
-    //cantidad?:Number;
+    estadoMoto:String;
+    idmoto:String;
     fecha?:Date;
     total?:Number
     //constructor(){}

@@ -52,13 +52,13 @@ export class PedidoService {
     console.log("*1");
     const ref = collection(this.dbb, this.dbpath);
     console.log("*2");
-    let xx={
+    /*let xx={
       cliente:prod.cliente,
       detalle:prod.detalle,
       fecha:prod.fecha,
       total:prod.total
-  };
-    
+    };*/
+    let xx=JSON.parse(JSON.stringify(prod));
     return addDoc(ref,xx);
   }
   /*edit(id:string,prod:Coleccion){

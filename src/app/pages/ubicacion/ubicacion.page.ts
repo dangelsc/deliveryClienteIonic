@@ -1,53 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
-import { AuthenticationService } from 'src/app/services/Authentication.service';
-import { Platform } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { Map, tileLayer, marker, icon } from 'leaflet';
-//import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-
+import { AuthenticationService } from 'src/app/services/Authentication.service';
+import { UserService } from 'src/app/services/user.service';
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.page.html',
-  styleUrls: ['./register.page.scss'],
+  selector: 'app-ubicacion',
+  templateUrl: './ubicacion.page.html',
+  styleUrls: ['./ubicacion.page.scss'],
 })
-export class RegisterPage implements OnInit {
-  public email:String;
-  public nombre:String;
-  public password:String;
-  public lat:Number;
-  public lon:Number;
-  public maker;
-  constructor(
-    private geolocation: Geolocation,
-    //public plt: Platform,
-    //public router: Router,
-    private aut:AuthenticationService
-    ,private alertCtrl:AlertController,
-    private control:ModalController
+export class UbicacionPage implements OnInit {
+  lat;
+  lon;
+  maker;
+  constructor(//private geolocation: Geolocation,
+    private dbuser:UserService,
+    private aut:AuthenticationService,
+    private modal:ModalController
     ) { }
 
   ngOnInit() {
   }
   ngAfterViewInit() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-      this.lat= resp.coords.latitude
-      this.lon= resp.coords.longitude
-      this.initMap([]);
-     }).catch((error) => {
-       console.log('Error getting location', error);
-     });
+    let ver= this.aut.isLogin();
+    
+    if(ver){
+      console.log("Buscando ubicacion del usuario");
+        this.aut.userDetalle().then((dato:any)=>{
+          console.log("user",dato.uid);
+          this.dbuser.getItem(dato.uid).subscribe(s=>{
+            console.log("user",s[0]);
+            this.lat=s[0].lat;  
+            this.lon=s[0].lon;
+            this.initMap();
+          })
+        })
+      }
 
-    /*this.plt.ready().then(() => {
-      this.http.get('https://oghuxxw1e6.execute-api.us-east-1.amazonaws.com/dev')
-      .pipe(map((res:any) => res.json()))
-      .subscribe(restaurants =>
-      */
-         //this.initMap([]);//restaurants)//);
-      ///});
+    
   }
-  initMap(restaurants) {
+  initMap() {
     const map = new Map('map').setView([this.lat, this.lon], 12);
 
     tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -58,7 +49,7 @@ export class RegisterPage implements OnInit {
       //attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
     map.locate({ setView: true });
-    map.on('dragend',(MouseEvent) =>{
+    map.on('click',(MouseEvent) =>{
       map.removeLayer(this.maker);
       console.log(map.getCenter());
       let x=map.getCenter();
@@ -90,39 +81,8 @@ export class RegisterPage implements OnInit {
    this.maker= marker([40.4, -3.7], {icon: myIcon});
    this.maker.addTo(map).openPopup();
  
-    /*restaurants.forEach((restaurant) => {
-      marker([restaurant.position.lat, restaurant.position.lgn], {icon: customMarkerIcon})
-      .bindPopup(`<b>${restaurant.title}</b>`, { autoClose: false })
-      .on('click', () => this.router.navigateByUrl('/restaurant'))
-      .addTo(map).openPopup();
-    });*/
   }
-  registro(){
-    this.aut.register(this.email,this.password).then(res=>{
-      if(res.user.uid){
-        this.aut.nuevo({
-          nombre:this.nombre,
-          email:this.email,
-          uid:res.user.uid,
-          password:this.password,
-          lat:this.lat,
-          lon:this.lon
-        }).then( async res=>{
-          const alert = await this.alertCtrl.create({
-            cssClass: 'my-custom-class',
-            header: 'Registro',
-            subHeader: 'Confirmado registro',
-            message: 'Ya tiene su cuenta en Delivery',
-            buttons: ['OK']
-          });
-      
-          await alert.present();
-      
-          const { role } = await alert.onDidDismiss();
-          this.control.dismiss();
-        })
-      }
-    })
-    
+  enviar(){
+    this.modal.dismiss({lat:this.lat,lon:this.lon});
   }
 }

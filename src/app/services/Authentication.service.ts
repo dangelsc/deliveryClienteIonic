@@ -33,7 +33,7 @@ export class AuthenticationService {
     }).catch(() => {console.log("Error during setting log in persistence"); return (null)})
 
     return (res);
-    return this.afAuth.signInWithEmailAndPassword(email,password);
+    //return this.afAuth.default.auth().signInWithEmailAndPassword(email,password);
   }
   logout()  : Promise<any>
   {
